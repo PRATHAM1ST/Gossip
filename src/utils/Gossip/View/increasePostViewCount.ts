@@ -4,29 +4,19 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const sha1 = require("sha1");
+
 export type ViewType = {
 	postId: string;
 	userId: string;
 };
 
 export async function increasePostViewCount({ postId, userId }: ViewType) {
+	const getUniqueId = sha1(postId + userId);
 	try {
-		const viewCheck = await prisma.view.findFirst({
-			where: {
-				postId,
-				userId,
-			},
-		});
-
-		if (viewCheck) {
-			return {
-				success: false,
-				message: "Already viewed",
-			};
-		}
-		
 		await prisma.view.create({
 			data: {
+				id: getUniqueId,
 				post: {
 					connect: {
 						id: postId,

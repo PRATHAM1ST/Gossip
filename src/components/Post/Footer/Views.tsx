@@ -14,19 +14,18 @@ export default function ViewsIncrementer({
 }) {
 	useEffect(() => {
 		if (!userId) return;
-		if (process.env.NODE_ENV !== "development") {
-			increasePostViewCount({
-				postId: postId,
-				userId: String(userId),
+		increasePostViewCount({
+			postId: postId,
+			userId: String(userId),
+		})
+			.then((res) => {
+				if (res.success) throw new Error(res.message);
 			})
-				.then((res) => {
-					if (res.success) throw new Error(res.message);
-				})
-				.catch((err) => {
-					console.error(err);
-				});
-		} // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [postId]);
+			.catch((err) => {
+				console.error(err);
+			});
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	return <>{Number(views.length) + 1} Views</>;
+	return <>{Number(views.length)} Views</>;
 }

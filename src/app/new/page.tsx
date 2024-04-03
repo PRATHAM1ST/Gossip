@@ -90,11 +90,9 @@ export default function New() {
 	};
 
 	useEffect(() => {
-		if (process.env.NODE_ENV !== "development") {
-			getReactions().then((data: Reactions[]) => {
-				setReactions(data);
-			});
-		}
+		getReactions().then((data: Reactions[]) => {
+			setReactions(data);
+		});
 	}, []);
 
 	function handleSubmit(formData: FormData) {
@@ -204,7 +202,7 @@ export default function New() {
 									<label
 										className={`cursor-pointer ${
 											emojie === idx
-												? "text-3xl border-2 border-black rounded-full p-1"
+												? "text-3xl border-2 border-black dark:border-white rounded-full p-1"
 												: "text-lg"
 										}`}
 										htmlFor={reaction.id}

@@ -1,6 +1,5 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import AuthSetter from "../components/Auth/AuthSetter";
 import { inter } from "./fonts";
 import { ThemeProvider } from "@/components/theme-provider";
 import NextAuthProvider from "./providers/NextAuthProvider";
@@ -32,7 +31,6 @@ export default async function RootLayout({
 						>
 							{children}
 						</ThemeProvider>
-						<AuthSetter />
 					</>
 				</NextAuthProvider>
 			</body>

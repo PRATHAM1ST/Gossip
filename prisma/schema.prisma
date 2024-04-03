@@ -11,48 +11,34 @@ datasource db {
   // directUrl = env("DIRECT_URL")
 }
 
-model UserReactionsJson {
-  id         String   @id @default(uuid())
-  post       Post     @relation(fields: [postId], references: [id])
-  postId     String
-  reaction   Reaction @relation(fields: [reactionId, emojie], references: [id, emojie])
-  reactionId String
-  emojie     String
-  User       User?    @relation(fields: [userId], references: [id])
-  userId     String?
-}
-
 model User {
   id               String              @id @default(uuid())
   joinedAt         DateTime            @default(now())
   accessedAt       DateTime            @updatedAt
   name             String
   email            String              @unique
-  reactions        UserReactionsJson[]
-  posts            Post[]
-  reports          Report[]
   views            View[]
-  PostReactionJson PostReactionJson[]
+  PostReaction     PostReaction[]
 }
 
-model Reaction {
+model ReactionsList {
   id                String              @id @default(uuid())
   emojie            String              @unique
+  description       String              @unique
   lastUsedAt        DateTime            @updatedAt
   totalUsed         Int                 @default(0)
-  UserReactionsJson UserReactionsJson[]
-  PostReactionJson  PostReactionJson[]
+  PostReaction  PostReaction[]
 
   @@unique([emojie, id])
 }
 
-model PostReactionJson {
-  id         String   @id @default(uuid())
-  user       User     @relation(fields: [userId], references: [id])
+model PostReaction {
+  id         String         @id @default(uuid())
+  user       User           @relation(fields: [userId], references: [id])
   userId     String
-  post       Post     @relation(fields: [postId], references: [id])
+  post       Post           @relation(fields: [postId], references: [id])
   postId     String
-  reaction   Reaction @relation(fields: [reactionId, emojie], references: [id, emojie])
+  reaction   ReactionsList  @relation(fields: [reactionId, emojie], references: [id, emojie])
   reactionId String
   emojie     String
 }
@@ -66,20 +52,15 @@ model Post {
   backgroundEmoji   String
   views             View[]
   totalReactions    Int                 @default(0)
-  reactions         PostReactionJson[]
-  author            User                @relation(fields: [authorId], references: [id])
-  authorId          String
+  reactions         PostReaction[]
   reports           Report[]
   images            Json[]              @default([])
-  UserReactionsJson UserReactionsJson[]
 }
 
 model Report {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   reason    String
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  String
   post      Post     @relation(fields: [postId], references: [id])
   postId    String
 }

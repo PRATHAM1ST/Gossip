@@ -18,12 +18,7 @@ import {
 } from "@/components/ui/carousel";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+
 
 export default async function Home({ params }: { params: { page: number } }) {
 	const gossipsResponse: GossipsResponseType = await getGossips({
@@ -41,7 +36,7 @@ export default async function Home({ params }: { params: { page: number } }) {
 				<>
 					<div
 						key={gossip.id}
-						className="relative container grid gap-3 px-6 py-7 max-w-2xl mx-auto "
+						className="relative container grid gap-3 px-6 py-7 max-w-2xl mx-auto"
 						// className="relative container grid gap-3 border-2 border-black dark:border-slate-300 rounded-2xl px-6 py-7 max-w-2xl mx-auto "
 					>
 						<div

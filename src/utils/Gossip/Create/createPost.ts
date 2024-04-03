@@ -19,35 +19,24 @@ export async function createPost({
 	userId,
 	images,
 }: RequestType) {
-	const result = await prisma.post.create({
-		data: {
-			title: title,
-			content: content,
-			backgroundEmoji: backgroundEmoji,
-			images: images,
-			author: {
-				connect: {
-					id: userId,
-				},
+	try {
+		const result = await prisma.post.create({
+			data: {
+				title: title,
+				content: content,
+				backgroundEmoji: backgroundEmoji,
+				images: images,
 			},
-		},
-	});
+		});
 
-	await prisma.user.update({
-		where: {
-			id: userId,
-		},
-		data: {
-			posts: {
-				connect: {
-					id: result.id,
-				},
-			},
-		},
-	});
-
-	return {
-        sucess: true,
-        message: "Post created successfully"
-    };
+		return {
+			sucess: true,
+			message: "Post created successfully",
+		};
+	} catch (e: any) {
+		return {
+			sucess: false,
+			message: e.message,
+		};
+	}
 }

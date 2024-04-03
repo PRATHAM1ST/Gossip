@@ -140,7 +140,11 @@ const createAnonymousUser = (): User => {
 	createUser({
 		email: email,
 		name: unique_realname,
-	}).catch((e) => {
+	})
+	.then((user) => {
+		
+	})
+	.catch((e) => {
 		console.log("error in creating the user", e);
 	});
 

@@ -22,11 +22,6 @@ export const addPostReport = async (req: RequestType) => {
 						id: postId,
 					},
 				},
-				author: {
-					connect: {
-						id: userId,
-					},
-				},
 			},
 		});
 

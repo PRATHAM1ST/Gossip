@@ -57,7 +57,7 @@ export default function ReactionAdder({
 					id: String(res.reactionId),
 					emojie: String(res.emojie),
 				});
-				setPostReactions(res.updatedPostReactions);
+				// setPostReactions(res.updatedPostReactions);
 			})
 			.catch((err) => {
 				console.log("err", err);
@@ -127,7 +127,7 @@ export default function ReactionAdder({
 									</span>
 								</TooltipTrigger>
 								<TooltipContent>
-									<p>{reaction?.id}</p>
+									<p>{reaction?.description}</p>
 								</TooltipContent>
 							</Tooltip>
 						</TooltipProvider>
