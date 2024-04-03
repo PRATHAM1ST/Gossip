@@ -6,78 +6,95 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
-type UserReactionsJson {
-  postId            String     @db.ObjectId
-  reactionId        String
-  emojie            String
+model UserReactionsJson {
+  id         String   @id @default(uuid())
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     String
+  reaction   Reaction @relation(fields: [reactionId, emojie], references: [id, emojie])
+  reactionId String
+  emojie     String
+  User       User?    @relation(fields: [userId], references: [id])
+  userId     String?
 }
 
 model User {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  joinedAt          DateTime    @default(now())
-  accessedAt        DateTime    @updatedAt
-  name              String
-  email             String      @unique
-  reactions         UserReactionsJson[]
-  posts             Post[]
-  reports           Report[]
-  views             View[]
+  id               String              @id @default(uuid())
+  joinedAt         DateTime            @default(now())
+  accessedAt       DateTime            @updatedAt
+  name             String
+  email            String              @unique
+  reactions        UserReactionsJson[]
+  posts            Post[]
+  reports          Report[]
+  views            View[]
+  PostReactionJson PostReactionJson[]
 }
 
 model Reaction {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  emojie            String
-  lastUsedAt        DateTime    @updatedAt
-  totalUsed         Int         @default(0)
+  id                String              @id @default(uuid())
+  emojie            String              @unique
+  lastUsedAt        DateTime            @updatedAt
+  totalUsed         Int                 @default(0)
+  UserReactionsJson UserReactionsJson[]
+  PostReactionJson  PostReactionJson[]
+
+  @@unique([emojie, id])
 }
 
-type PostReactionJson {
-  userId            String     @db.ObjectId
-  reactionId        String
-  emojie            String
+model PostReactionJson {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     String
+  reaction   Reaction @relation(fields: [reactionId, emojie], references: [id, emojie])
+  reactionId String
+  emojie     String
 }
 
 model Post {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  id                String              @id @default(uuid())
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
   title             String
-  content           String   
+  content           String
   backgroundEmoji   String
   views             View[]
-  totalReactions    Int         @default(0)
-  reactions         PostReactionJson[]     
-  author            User        @relation(fields: [authorId], references: [id])
-  authorId          String      @db.ObjectId
+  totalReactions    Int                 @default(0)
+  reactions         PostReactionJson[]
+  author            User                @relation(fields: [authorId], references: [id])
+  authorId          String
   reports           Report[]
-  images            Json[]      @default([])
+  images            Json[]              @default([])
+  UserReactionsJson UserReactionsJson[]
 }
 
 model Report {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt         DateTime    @default(now())
-  reason            String
-  author            User        @relation(fields: [authorId], references: [id])
-  authorId          String      @db.ObjectId
-  post              Post        @relation(fields: [postId], references: [id])
-  postId            String      @db.ObjectId
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  reason    String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
 }
 
 model View {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  post              Post        @relation(fields: [postId], references: [id])
-  postId            String      @db.ObjectId
-  user              User        @relation(fields: [userId], references: [id])
-  userId            String      @db.ObjectId
+  id     String @id @default(uuid())
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 }
 
 model Temp {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  imageData         Json     
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  imageData Json
 }
