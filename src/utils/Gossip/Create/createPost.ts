@@ -8,7 +8,6 @@ export type RequestType = {
 	title: string;
 	content: string;
 	backgroundEmoji: string;
-	userId: string;
 	images: Prisma.InputJsonValue[];
 };
 
@@ -16,11 +15,10 @@ export async function createPost({
 	title,
 	content,
 	backgroundEmoji,
-	userId,
 	images,
 }: RequestType) {
 	try {
-		const result = await prisma.post.create({
+		await prisma.post.create({
 			data: {
 				title: title,
 				content: content,

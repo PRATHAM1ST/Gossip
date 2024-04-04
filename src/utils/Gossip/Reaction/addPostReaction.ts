@@ -3,20 +3,34 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const sha1 = require("sha1");
 
 export type RequestType = {
-	userId: string;
+	userEmail: string;
 	postId: string;
 	reactionId: string;
 };
 
 export async function addPostReaction({
-	userId,
+	userEmail,
 	postId,
 	reactionId,
 }: RequestType) {
 
-	const getUniqueId = userId + postId;
+	const user = await prisma.user.findUnique({
+		where: {
+			email: userEmail,
+		},
+	});
+	if (!user) {
+		return {
+			success: false,
+			message: "User not found",
+		};
+	}
+	const userId = user.id;
+
+	const getUniqueId = sha1(userId + postId);
 
 	try{
 		const result = await prisma.postReaction.create({

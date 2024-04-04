@@ -10,14 +10,19 @@ export default function AnonymousSessionProvider({
 	const { data: session, status } = useSession();
 
 	useEffect(() => {
+		localStorage.setItem("userAuthentication", "false");
 		if (status === "unauthenticated") {
+			localStorage.removeItem("userAuthentication");
 			// login as anonymous
 			signIn("credentials").then((data) => {
 				// async sign-in returned
 			});
 		}
-		if (status === "authenticated") {
+
+		if (status === "authenticated" && localStorage.getItem("userAuthentication") === "false"){
+			localStorage.setItem("userAuthentication", "true");
 			// check for logged in user
+			console.log('getUserConfirmation called');
 			const a = getUserConfirmation({
 				email: session?.user?.email as string,
 			}).then((data) => {
@@ -25,7 +30,6 @@ export default function AnonymousSessionProvider({
 					
 					// user exists
 					console.log("user exists");
-					localStorage.setItem("userId", data.userId as string);
 
 				} else {
 					// user does not exist
@@ -36,6 +40,7 @@ export default function AnonymousSessionProvider({
 				}
 			});
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [status]);
 
 	return <>{children}</>;

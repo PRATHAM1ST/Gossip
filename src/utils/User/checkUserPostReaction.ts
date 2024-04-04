@@ -3,32 +3,44 @@
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
+const sha1 = require("sha1");
 
 export type RequestType = {
-	userId: string;
+	userEmail: string;
 	postId: string;
 };
 
-export async function checkUserPostReaction({ userId, postId }: RequestType) {
-	const reactionExistsInPost = await prisma.user.findUnique({
+export async function checkUserPostReaction({ userEmail, postId }: RequestType) {
+
+	const user = await prisma.user.findUnique({
 		where: {
-			id: userId,
-		},
-		select: {
-			reactions: true,
+			email: userEmail,
 		},
 	});
 
-	const reaction: any = reactionExistsInPost?.reactions?.find(
-		(item: any) => item.postId === postId
-	);
+	if (!user) {
+		return {
+			success: false,
+			message: "User not found",
+		};
+	}
 
-	if (reaction) {
+	const userId = user.id;
+
+	const getUniqueId = sha1(userId + postId);
+	const reactionExistsInPost = await prisma.postReaction.findUnique({
+		where: {
+			id: getUniqueId,
+		},
+	});
+
+	if (reactionExistsInPost) {
 		return {
 			success: true,
 			message: "Reaction already exists",
-			reactionId: reaction.reactionId,
-            emojie: reaction.emojie,
+			reactionId: reactionExistsInPost.reactionId,
+            emojie: reactionExistsInPost.emojie,
+			userId: reactionExistsInPost.userId,
 		};
 	}
 

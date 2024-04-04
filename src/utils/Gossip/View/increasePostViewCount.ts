@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { PrismaClient } from "@prisma/client";
 
@@ -8,10 +8,25 @@ const sha1 = require("sha1");
 
 export type ViewType = {
 	postId: string;
-	userId: string;
+	userEmail: string;
 };
 
-export async function increasePostViewCount({ postId, userId }: ViewType) {
+export async function increasePostViewCount({ postId, userEmail }: ViewType) {
+
+	const user = await prisma.user.findUnique({
+		where: {
+			email: userEmail,
+		},
+	});
+	
+	if (!user) {
+		return {
+			success: false,
+			message: "User not found",
+		};
+	}
+	const userId = user.id;
+
 	const getUniqueId = sha1(postId + userId);
 	try {
 		await prisma.view.create({

@@ -2,24 +2,24 @@
 
 import { useEffect } from "react";
 import { increasePostViewCount } from "@/utils/Gossip/View/increasePostViewCount";
+import { useSession } from "next-auth/react";
 
 export default function ViewsIncrementer({
-	userId,
 	postId,
 	views,
 }: {
-	userId: string;
 	postId: string;
 	views: object[];
 }) {
+	const { data: session } = useSession();
 	useEffect(() => {
-		if (!userId) return;
+		console.log('increasePostViewCount called');
 		increasePostViewCount({
 			postId: postId,
-			userId: String(userId),
+			userEmail: session?.user?.email as string,
 		})
 			.then((res) => {
-				if (res.success) throw new Error(res.message);
+				if (!res.success) throw new Error(res.message);
 			})
 			.catch((err) => {
 				console.error(err);

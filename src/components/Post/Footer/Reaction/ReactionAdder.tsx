@@ -17,9 +17,9 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useSession } from "next-auth/react";
 
 export default function ReactionAdder({
-	userId,
 	postId,
 	reactions,
 	currentReaction,
@@ -33,16 +33,17 @@ export default function ReactionAdder({
 	currentReaction: {
 		id: string;
 		emojie: string;
+		userId: string;
 	} | null;
 	setCurrentReaction: any;
 	setPostReactions: any;
 	setReactionsOnPostCount: any;
 }) {
+	const { data: session } = useSession();
 	const handleAddingReaction = (reactionId: string) => {
-		if (!userId) return;
 		console.log("adding reaction");
 		addPostReaction({
-			userId: String(userId),
+			userEmail: session?.user?.email as string,
 			postId: postId,
 			reactionId: reactionId,
 		})
@@ -56,6 +57,7 @@ export default function ReactionAdder({
 				setCurrentReaction({
 					id: String(res.reactionId),
 					emojie: String(res.emojie),
+					userId: String(currentReaction?.userId),
 				});
 				// setPostReactions(res.updatedPostReactions);
 			})
@@ -68,7 +70,7 @@ export default function ReactionAdder({
 		console.log("removing reaction");
 
 		removePostReaction({
-			userId: userId,
+			userEmail: session?.user?.email as string,
 			postId: postId,
 		})
 			.then((res) => {

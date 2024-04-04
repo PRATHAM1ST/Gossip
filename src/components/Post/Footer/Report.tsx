@@ -21,18 +21,10 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-export default function Report({
-	postId,
-	userId,
-}: {
-	postId: string;
-	userId: string;
-}) {
-	const [reportModal, setReportModal] = useState(false);
+export default function Report({ postId }: { postId: string }) {
 	const [reportReason, setReportReason] = useState("");
 
 	const handleAddReport = () => {
-		if (!userId) return;
 		if (
 			!reportReason &&
 			reportReason.length < 10 &&
@@ -42,7 +34,6 @@ export default function Report({
 		}
 		addPostReport({
 			postId: postId,
-			userId: userId,
 			reason: reportReason,
 		})
 			.then((res) => {
@@ -54,7 +45,6 @@ export default function Report({
 				console.log("err", err);
 			})
 			.finally(() => {
-				setReportModal(false);
 				setReportReason("");
 			});
 	};
@@ -71,7 +61,6 @@ export default function Report({
 									variant={"outline"}
 									size={"sm"}
 									className="report border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
-									onClick={() => setReportModal(true)}
 								>
 									Report
 								</Button>
@@ -109,7 +98,6 @@ export default function Report({
 									variant="outline"
 									className="w-full"
 									onClick={() => {
-										setReportModal(false);
 										setReportReason("");
 									}}
 								>

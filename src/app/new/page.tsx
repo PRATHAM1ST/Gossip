@@ -15,6 +15,7 @@ import { addTempImageUpload } from "@/utils/Temp/addTempImageUpload";
 import { removeTempImageUpload } from "@/utils/Temp/removeTempImageUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSession } from "next-auth/react";
 
 type Reactions = {
 	id: string;
@@ -60,15 +61,7 @@ export default function New() {
 	const [uploadResponses, setUploadResponses] = useState<UploadResponse[]>(
 		[]
 	);
-	// Get userId from localStorage and set it in state
-	const [userId, setUserId] = useState<string>("");
-
-	useEffect(() => {
-		const storedUserId = localStorage.getItem("userId");
-		if (storedUserId) {
-			setUserId(storedUserId);
-		}
-	}, []);
+	const { data: session } = useSession();
 
 	const handleUpload = async (e: any) => {
 		const tempid = await addTempImageUpload(e).then((res) => res.id);
@@ -108,7 +101,6 @@ export default function New() {
 			title,
 			content,
 			backgroundEmoji,
-			userId,
 			images: uploadResponses,
 		};
 
