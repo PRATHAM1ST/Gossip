@@ -112,27 +112,30 @@ export default function ReactionAdder({
 					{/* <HeartIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"/> */}
 				</HoverCardTrigger>
 				<HoverCardContent side="top" className="flex gap-4">
-					{reactions.map((reaction: ReactionsType) => (
-						<TooltipProvider key={reaction.id}>
-							<Tooltip>
-								<TooltipTrigger className="cursor-pointer text-2xl hover:scale-150 origin-bottom ease-in-out duration-100 align-baseline">
-									<span
-										className="cursor-pointer text-2xl hover:scale-125 ease-in-out duration-100 align-baseline"
-										onClick={() =>
-											handleAddingReaction(reaction.id)
-										}
-									>
-										{userReaction?.id === reaction.id
-											? ""
-											: reaction.emojie}
-									</span>
-								</TooltipTrigger>
-								<TooltipContent>
-									<p>{reaction?.description}</p>
-								</TooltipContent>
-							</Tooltip>
-						</TooltipProvider>
-					))}
+					{reactions.map(
+						(reaction: ReactionsType) =>
+							userReaction?.id !== reaction.id && (
+								<TooltipProvider key={reaction.id}>
+									<Tooltip>
+										<TooltipTrigger className="cursor-pointer text-2xl hover:scale-150 origin-bottom ease-in-out duration-100 align-baseline">
+											<span
+												className="cursor-pointer text-2xl hover:scale-125 ease-in-out duration-100 align-baseline"
+												onClick={() =>
+													handleAddingReaction(
+														reaction.id
+													)
+												}
+											>
+												{reaction.emojie}
+											</span>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>{reaction?.description}</p>
+										</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
+							)
+					)}
 				</HoverCardContent>
 			</HoverCard>
 		</Button>
