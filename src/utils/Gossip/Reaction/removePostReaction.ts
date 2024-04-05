@@ -1,9 +1,9 @@
 "use server";
 
+import { getUniqueId } from "@/utils/getUniqueId";
 import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
-const sha1 = require("sha1");
 
 export type RequestType = {
 	userEmail: string;
@@ -26,12 +26,15 @@ export async function removePostReaction({ userEmail, postId }: RequestType) {
 
 	const userId = user.id;
 
-	const getUniqueId = sha1(userId + postId);
+	const uniqueId = getUniqueId({
+		userId: userId,
+		postId: postId,
+	});
 
 	try {
 		await prisma.postReaction.delete({
 			where: {
-				id: getUniqueId,
+				id: uniqueId,
 			},
 		});
 	} catch (err: any) {

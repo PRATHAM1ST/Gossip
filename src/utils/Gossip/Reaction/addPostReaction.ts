@@ -1,9 +1,9 @@
 "use server";
 
+import { getUniqueId } from "@/utils/getUniqueId";
 import { PrismaClient, Prisma } from "@prisma/client";
 
 const prisma = new PrismaClient();
-const sha1 = require("sha1");
 
 export type RequestType = {
 	userEmail: string;
@@ -16,7 +16,6 @@ export async function addPostReaction({
 	postId,
 	reactionId,
 }: RequestType) {
-
 	const user = await prisma.user.findUnique({
 		where: {
 			email: userEmail,
@@ -30,12 +29,15 @@ export async function addPostReaction({
 	}
 	const userId = user.id;
 
-	const getUniqueId = sha1(userId + postId);
+	const uniqueId = getUniqueId({
+		userId: userId,
+		postId: postId,
+	});
 
-	try{
+	try {
 		const result = await prisma.postReaction.create({
 			data: {
-				id: getUniqueId,
+				id: uniqueId,
 				user: {
 					connect: {
 						id: userId,
@@ -59,12 +61,10 @@ export async function addPostReaction({
 			reactionId: reactionId,
 			emojie: result.emojie,
 		};
-	}
-
-	catch (err: any) {
+	} catch (err: any) {
 		const result = await prisma.postReaction.update({
 			where: {
-				id: getUniqueId,
+				id: uniqueId,
 			},
 			data: {
 				reaction: {
@@ -81,7 +81,4 @@ export async function addPostReaction({
 			emojie: result.emojie,
 		};
 	}
-	
-
-	
 }

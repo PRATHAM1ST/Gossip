@@ -1,17 +1,19 @@
 "use server";
 
 import { PrismaClient } from "@prisma/client";
+import { getUniqueId } from "../getUniqueId";
 
 const prisma = new PrismaClient();
-const sha1 = require("sha1");
 
 export type RequestType = {
 	userEmail: string;
 	postId: string;
 };
 
-export async function checkUserPostReaction({ userEmail, postId }: RequestType) {
-
+export async function checkUserPostReaction({
+	userEmail,
+	postId,
+}: RequestType) {
 	const user = await prisma.user.findUnique({
 		where: {
 			email: userEmail,
@@ -27,10 +29,13 @@ export async function checkUserPostReaction({ userEmail, postId }: RequestType) 
 
 	const userId = user.id;
 
-	const getUniqueId = sha1(userId + postId);
+	const uniqueId = getUniqueId({
+		userId: userId,
+		postId: postId,
+	});
 	const reactionExistsInPost = await prisma.postReaction.findUnique({
 		where: {
-			id: getUniqueId,
+			id: uniqueId,
 		},
 	});
 
@@ -39,7 +44,7 @@ export async function checkUserPostReaction({ userEmail, postId }: RequestType) 
 			success: true,
 			message: "Reaction already exists",
 			reactionId: reactionExistsInPost.reactionId,
-            emojie: reactionExistsInPost.emojie,
+			emojie: reactionExistsInPost.emojie,
 			userId: reactionExistsInPost.userId,
 		};
 	}

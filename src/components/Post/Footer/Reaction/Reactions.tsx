@@ -3,16 +3,19 @@
 import React, { useEffect, useState } from "react";
 import ReactionAdder from "./ReactionAdder";
 import { ReactionsType } from "@/utils/Reaction/getReactions";
-import { checkUserPostReaction } from "@/utils/User/checkUserPostReaction";
-import { useSession } from "next-auth/react";
 
 export default function Reactions({
+	userReaction,
+	setUserReaction,
+	userEmail,
 	postId,
 	reactionsOnPost,
 	defaultReactionAdderArray,
 	setReactionsOnPostCount,
 }: {
-	userId: string;
+	userReaction: any;
+	setUserReaction: any;
+	userEmail: string;
 	postId: string;
 	reactionsOnPost: ReactionsType[];
 	defaultReactionAdderArray: ReactionsType[];
@@ -20,45 +23,10 @@ export default function Reactions({
 }) {
 	const [postReactions, setPostReactions] =
 		useState<ReactionsType[]>(reactionsOnPost);
-	const [currentReaction, setCurrentReaction] = useState<{
-		id: string;
-		emojie: string;
-		userId: string;
-	} | null>(null);
-
-	const { data: session } = useSession();
-
-	const getCurrentUserReaction = () => {
-		if (!session?.user?.email) return;
-
-		checkUserPostReaction({
-			userEmail: session?.user?.email as string,
-			postId: postId,
-		})
-			.then((res) => {
-				if (!res.success) {
-					throw res.message;
-				}
-				setCurrentReaction({
-					id: res.reactionId as string,
-					emojie: res.emojie as string,
-					userId: res.userId as string,
-				});
-			})
-			.catch((err) => {
-				console.log("err", err);
-			});
-	};
-
-	useEffect(() => {
-		getCurrentUserReaction(); // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [session]);
 
 	useEffect(() => {
 		setPostReactions(reactionsOnPost);
-	}, [currentReaction, reactionsOnPost]);
-
-	console.log(postReactions);
+	}, [userReaction, reactionsOnPost]);
 
 	return (
 		<div className="reactions flex text-2xl items-center justify-center">
@@ -67,18 +35,19 @@ export default function Reactions({
 				.slice(-5)
 				.map(
 					(reaction: any, idx: number) =>
-						reaction.userId !== currentReaction?.userId && (
+						reaction.userId !== userReaction?.userId && (
 							<div className="-ml-5" key={idx}>
 								{reaction.emojie}
 							</div>
 						)
 				)}
 			<ReactionAdder
+				userEmail={userEmail}
 				setReactionsOnPostCount={setReactionsOnPostCount}
 				postId={postId}
 				reactions={defaultReactionAdderArray}
-				currentReaction={currentReaction}
-				setCurrentReaction={setCurrentReaction}
+				userReaction={userReaction}
+				setUserReaction={setUserReaction}
 				setPostReactions={setPostReactions}
 			/>
 		</div>

@@ -1,10 +1,9 @@
 "use server";
 
+import { getUniqueId } from "@/utils/getUniqueId";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
-
-const sha1 = require("sha1");
 
 export type ViewType = {
 	postId: string;
@@ -27,11 +26,14 @@ export async function increasePostViewCount({ postId, userEmail }: ViewType) {
 	}
 	const userId = user.id;
 
-	const getUniqueId = sha1(postId + userId);
+	const uniqueId = getUniqueId({
+		userId: userId,
+		postId: postId,
+	});
 	try {
 		await prisma.view.create({
 			data: {
-				id: getUniqueId,
+				id: uniqueId,
 				post: {
 					connect: {
 						id: postId,

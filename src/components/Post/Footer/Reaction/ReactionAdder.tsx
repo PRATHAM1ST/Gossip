@@ -17,33 +17,32 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useSession } from "next-auth/react";
 
 export default function ReactionAdder({
+	userEmail,
 	postId,
 	reactions,
-	currentReaction,
-	setCurrentReaction,
+	userReaction,
+	setUserReaction,
 	setPostReactions,
 	setReactionsOnPostCount,
 }: {
-	userId: string;
+	userEmail: string;
 	postId: string;
 	reactions: ReactionsType[];
-	currentReaction: {
+	userReaction: {
 		id: string;
 		emojie: string;
 		userId: string;
 	} | null;
-	setCurrentReaction: any;
+	setUserReaction: any;
 	setPostReactions: any;
 	setReactionsOnPostCount: any;
 }) {
-	const { data: session } = useSession();
 	const handleAddingReaction = (reactionId: string) => {
 		console.log("adding reaction");
 		addPostReaction({
-			userEmail: session?.user?.email as string,
+			userEmail: userEmail,
 			postId: postId,
 			reactionId: reactionId,
 		})
@@ -52,12 +51,12 @@ export default function ReactionAdder({
 					throw res.message;
 				}
 				setReactionsOnPostCount((prev: number) =>
-					currentReaction === null ? (prev += 1) : prev
+					userReaction === null ? (prev += 1) : prev
 				);
-				setCurrentReaction({
+				setUserReaction({
 					id: String(res.reactionId),
 					emojie: String(res.emojie),
-					userId: String(currentReaction?.userId),
+					userId: String(userReaction?.userId),
 				});
 				// setPostReactions(res.updatedPostReactions);
 			})
@@ -70,14 +69,14 @@ export default function ReactionAdder({
 		console.log("removing reaction");
 
 		removePostReaction({
-			userEmail: session?.user?.email as string,
+			userEmail: userEmail,
 			postId: postId,
 		})
 			.then((res) => {
 				if (!res.success) {
 					throw res.message;
 				}
-				setCurrentReaction(null);
+				setUserReaction(null);
 				setReactionsOnPostCount((prev: number) => (prev -= 1));
 			})
 			.catch((err) => {
@@ -103,9 +102,9 @@ export default function ReactionAdder({
 				<HoverCardTrigger className="w-full h-full flex items-center aspect-square justify-center">
 					{/* <AddOutlinedIcon className="m-auto" /> */}
 
-					{currentReaction ? (
+					{userReaction ? (
 						<div onClick={handleRemoveUserReaction}>
-							{currentReaction.emojie}
+							{userReaction.emojie}
 						</div>
 					) : (
 						<FavoriteBorderIcon onClick={addHeartIcon} />
@@ -123,7 +122,7 @@ export default function ReactionAdder({
 											handleAddingReaction(reaction.id)
 										}
 									>
-										{currentReaction?.id === reaction.id
+										{userReaction?.id === reaction.id
 											? ""
 											: reaction.emojie}
 									</span>
