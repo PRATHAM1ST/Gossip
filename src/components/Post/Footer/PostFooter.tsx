@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Reactions from "./Reaction/Reactions";
 import Report from "./Report";
-import ViewsIncrementer from "./Views";
 import { GossipsType } from "@/utils/Gossip/getGossips";
 import { ReactionsType } from "@/utils/Reaction/getReactions";
 import { useSession } from "next-auth/react";
@@ -63,7 +62,7 @@ export default function PostFooter({
 		<div className="container-footer flex justify-between items-center mt-4">
 			<Report postId={gossip.id} />
 			<div className="stats font-bold text-neutral-500 text-xs">
-				<>{Number(views)} Views</>
+				{Number(views)} Views
 				{" • "}
 				{reactionsOnPostCount} Reactions
 			</div>
