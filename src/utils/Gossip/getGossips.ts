@@ -22,7 +22,7 @@ export type GossipsResponseType = {
 	totalGossipsPages: Number,
 	data: GossipsType[],
 }
-
+ 
 export async function getGossips({ pageNumber }: { pageNumber: number }): Promise<GossipsResponseType>{
 	const totalGossips = await prisma.post.count();
 	const gossipsPerPage = 2;
