@@ -9,7 +9,7 @@ export type RequestType = {
 };
 
 export async function getUserConfirmation({ email }: RequestType) {
-	const result = await prisma.user.findFirst({
+	const result = await prisma.user.findUnique({
 		where: {
 			email: email,
 		},
