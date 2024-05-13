@@ -7,9 +7,9 @@ generator client {
 
 
 // ER Diagram generator
-generator erd {
-  provider = "prisma-erd-generator"
-}
+// generator erd {
+//   provider = "prisma-erd-generator"
+// }
 
 datasource db {
   provider  = "postgresql"
