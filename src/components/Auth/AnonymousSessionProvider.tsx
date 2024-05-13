@@ -34,9 +34,9 @@ export default function AnonymousSessionProvider({
 				} else {
 					// user does not exist
 					console.log("user does not exist");
-					signIn("credentials").then((data) => {
-						// async sign-in returned
-					});
+					// signIn("credentials").then((data) => {
+					// 	// async sign-in returned
+					// });
 				}
 			});
 		}
