@@ -63,7 +63,7 @@ export default function Share({ id, title }: { id: string; title: string }) {
 				</DialogTrigger>
 				<DialogContent>
 					<DialogHeader>
-						<div className="flex gap-5">
+						<div className="flex gap-5 flex-wrap">
 							<ContentCopyIcon
 								className="cursor-pointer"
 								onClick={() => {
