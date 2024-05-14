@@ -18,6 +18,7 @@ import { useSession } from "next-auth/react";
 import { checkAdmin } from "@/utils/Admin/checkAdmin";
 import { deleteReport } from "@/utils/Admin/deleteReport";
 import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
 
 export default function Admin() {
 	const { data: session } = useSession();
@@ -175,21 +176,18 @@ export default function Admin() {
 	}
 
 	return (
-		<div className="container grid gap-5 mb-5 mx-auto px-4 max-w-4xl">
+		<div className="container grid gap-8 mb-5 mx-auto px-4 max-w-4xl">
 			<Header />
+			<h1 className="text-4xl font-bold text-center mt-10">Admin Page</h1>
+			<Separator className="bg-black dark:bg-white my-5" />
 			<div>
-				<h1 className="text-4xl font-bold text-center mt-10">
-					Admin Page
-				</h1>
-				<h3 className="text-lg font-bold text-center text-slate-500 mt-5">
-					Add Emojie Reaction to DB
-				</h3>
-				<div className="flex flex-wrap justify-between gap-6 my-4">
+				<h3 className="text-2xl font-bold">Add Reaction</h3>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 justify-between gap-6 my-4">
 					{reactions ? (
 						reactions.map((reaction, idx: number) => (
 							<div
 								key={reaction.id}
-								className="flex items-center gap-4 text-3xl rounded outline p-2"
+								className="flex justify-between items-center gap-4 text-3xl border-2 border-black dark:border-slate-500 p-2 rounded"
 							>
 								<p>{reaction.emojie}</p>
 								<p className="text-xl">
@@ -216,34 +214,38 @@ export default function Admin() {
 					)}
 				</div>
 				<form onSubmit={sendDataToServerForEmojie}>
-					<div className="input grid gap-3 mx-auto">
-						<label htmlFor="emojie" className="font-bold">
-							Emojie*
-						</label>
-						<input
-							type="text"
-							className="border-2 border-black dark:border-slate-500 dark:bg-slate-900 rounded px-4 py-1"
-							name="emojie"
-							required
-						/>
-						<label htmlFor="description" className="font-bold">
-							Emojie Explaination*
-						</label>
-						<input
-							type="text"
-							className="border-2 border-black dark:border-slate-500 dark:bg-slate-900 rounded px-4 py-1"
-							name="description"
-							required
-						/>
-						<Button type="submit">Add Emojie</Button>
+					<div className="input flex justify-center items-end gap-8 mx-auto w-full flex-wrap md:flex-nowrap">
+						<div className="flex flex-col gap-2 w-full md:w-auto">
+							<label htmlFor="emojie" className="font-bold">
+								Emojie*
+							</label>
+							<input
+								type="text"
+								className="border-2 border-black dark:border-slate-500 dark:bg-slate-900 rounded px-4 py-1 md:w-14 w-full"
+								name="emojie"
+								required
+							/>
+						</div>
+						<div className="flex flex-col gap-2 w-full">
+							<label htmlFor="description" className="font-bold">
+								Emojie Explaination*
+							</label>
+							<input
+								type="text"
+								className="border-2 border-black dark:border-slate-500 dark:bg-slate-900 rounded px-4 py-1 w-full"
+								name="description"
+								required
+							/>
+						</div>
+						<Button type="submit" className="w-full md:w-auto">Add Emojie</Button>
 					</div>
 				</form>
 			</div>
 
+			<Separator className="bg-black dark:bg-white my-5" />
+
 			<div className="flex flex-col gap-4">
-				<h3 className="text-lg font-bold text-center text-slate-500 mt-5">
-					Reported Posts
-				</h3>
+				<h3 className="text-2xl font-bold">Reported Posts</h3>
 				{reportedPosts ? (
 					reportedPosts.map((report, idx: number) => (
 						<div
@@ -271,7 +273,7 @@ export default function Admin() {
 									).toLocaleDateString()}
 								</b>
 							</p>
-							<div className="flex gap-4">
+							<div className="flex gap-4 flex-wrap">
 								<Link href={`/view/${report.postId}`}>
 									<Button
 										variant="secondary"
@@ -304,8 +306,10 @@ export default function Admin() {
 				)}
 			</div>
 
+			<Separator className="bg-black dark:bg-white my-5" />
+
 			<div className="flex flex-col gap-4">
-				<h3 className=" flex justify-between items-center text-lg font-bold text-center text-slate-500 mt-5">
+				<h3 className=" flex justify-between items-center text-3xl font-bold mt-5 flex-wrap">
 					Temp Images
 					<Button
 						variant="destructive"
