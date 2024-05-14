@@ -85,7 +85,7 @@ export default function Admin() {
 			setTempImages(
 				(prev) =>
 					prev?.filter(
-						(tempImage) =>
+						(tempImage: any) =>
 							tempImage.imageData?.info.public_id !== public_id
 					) || null
 			);
@@ -97,7 +97,7 @@ export default function Admin() {
 
 	async function handleTempImagesDeleteOlderThanADay() {
 		if (tempImages) {
-			tempImages.forEach(async (tempImage) => {
+			tempImages.forEach(async (tempImage: any) => {
 				if (
 					Math.floor(
 						(new Date().getTime() -
@@ -111,7 +111,7 @@ export default function Admin() {
 						setTempImages(
 							(prev) =>
 								prev?.filter(
-									(tempImage) =>
+									(tempImage: any) =>
 										tempImage.imageData?.info.public_id !==
 										public_id
 								) || null
@@ -127,7 +127,9 @@ export default function Admin() {
 
 	async function handleDeleteReaction(reactionId: string) {
 		await deleteReaction(reactionId);
-		setReactions((prev) => prev.filter((reaction) => reaction.id !== reactionId));
+		setReactions((prev) =>
+			prev.filter((reaction) => reaction.id !== reactionId)
+		);
 	}
 
 	return (
@@ -143,10 +145,21 @@ export default function Admin() {
 				<div className="flex flex-wrap justify-between gap-6 my-4">
 					{reactions ? (
 						reactions.map((reaction, idx: number) => (
-							<div key={reaction.id} className="flex items-center gap-4 text-3xl rounded outline p-2">
+							<div
+								key={reaction.id}
+								className="flex items-center gap-4 text-3xl rounded outline p-2"
+							>
 								<p>{reaction.emojie}</p>
-								<p className="text-xl">{reaction.description}</p>
-								<Button size="sm" variant="destructive" onClick={(()=>handleDeleteReaction(reaction.id))}>
+								<p className="text-xl">
+									{reaction.description}
+								</p>
+								<Button
+									size="sm"
+									variant="destructive"
+									onClick={() =>
+										handleDeleteReaction(reaction.id)
+									}
+								>
 									Delete
 								</Button>
 							</div>
@@ -252,7 +265,7 @@ export default function Admin() {
 					</Button>
 				</h3>
 				{tempImages ? (
-					tempImages.map((tempImage, idx: number) => (
+					tempImages.map((tempImage: any, idx: number) => (
 						<div
 							key={tempImage.id}
 							className="border-2 border-black dark:border-slate-500 dark:bg-slate-900 rounded px-4 py-1"
@@ -280,14 +293,14 @@ export default function Admin() {
 											).getTime()) /
 											(1000 * 60 * 60)
 									) % 24}{" "}
-									Hours {" "}
-									{
-										Math.floor((new Date().getTime() -
+									Hours{" "}
+									{Math.floor(
+										(new Date().getTime() -
 											new Date(
 												tempImage.createdAt
 											).getTime()) /
-										(1000 * 60))
-									}{" "}
+											(1000 * 60)
+									)}{" "}
 									Minutes
 								</b>
 							</p>
