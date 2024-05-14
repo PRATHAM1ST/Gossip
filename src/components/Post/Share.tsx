@@ -44,7 +44,7 @@ export default function Share({ id, title }: { id: string; title: string }) {
 	return (
 		<div>
 			<Dialog>
-				<DialogTrigger className="aspect-square absolute left-full top-0 translate-y-2/4 -translate-x-2/4 ">
+				<DialogTrigger className="aspect-square md:absolute md:left-full md:top-0 md:translate-y-2/4 md:-translate-x-2/4 ">
 					<TooltipProvider>
 						<Tooltip>
 							<TooltipTrigger>

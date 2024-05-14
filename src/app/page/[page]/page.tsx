@@ -20,7 +20,7 @@ export default async function Home({ params }: { params: { page: number } }) {
 	const reactions: ReactionsType[] = await getReactions();
 
 	return (
-		<div className="container grid gap-5 mb-5 mx-auto px-4 max-w-4xl">
+		<div className="container grid gap-5 mb-5 mx-auto px-2 max-w-4xl">
 			<Header />
 			{gossips.map((gossip: GossipsType) => (
 				<>

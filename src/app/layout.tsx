@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { inter } from "./fonts";
 import { ThemeProvider } from "@/components/theme-provider";
 import NextAuthProvider from "./providers/NextAuthProvider";
-import { getServerSession } from "next-auth";
 
 export const metadata: Metadata = {
 	title: "Only Gossips",
@@ -19,7 +18,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body className={inter.className}>
 				<NextAuthProvider>
 					<>
