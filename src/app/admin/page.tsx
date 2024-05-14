@@ -175,6 +175,23 @@ export default function Admin() {
 		});
 	}
 
+	async function handleDeletePost(postId: string) {
+		const res = await deletePost(postId);
+		if (res.sucess) {
+			setReportedPosts(
+				(prev) =>
+					prev?.filter((report) => report.postId !== postId) || null
+			);
+			toast("Post Deleted", {
+				description: "Post has been deleted",
+			});
+		} else {
+			toast("Error Deleting Post", {
+				description: res.message,
+			});
+		}
+	}
+
 	return (
 		<div className="container grid gap-8 mb-5 mx-auto px-4 max-w-4xl">
 			<Header />
@@ -294,7 +311,7 @@ export default function Admin() {
 								<Button
 									variant="destructive"
 									className="my-4"
-									onClick={() => deletePost(report.postId)}
+									onClick={() => handleDeletePost(report.postId)}
 								>
 									Delete Post
 								</Button>
