@@ -16,6 +16,7 @@ import { removeTempImageUpload } from "@/utils/Temp/removeTempImageUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 type Reactions = {
 	id: string;
@@ -66,6 +67,9 @@ export default function New() {
 	const handleUpload = async (e: any) => {
 		const tempid = await addTempImageUpload(e).then((res) => res.id);
 		setUploadResponses((prev) => [...prev, { ...e, tempid: tempid }]);
+		toast("Image Uploaded", {
+			description: "Image has been uploaded successfully",
+		});
 	};
 
 	const handleDelete = async (uploadResponse: any) => {
@@ -77,8 +81,14 @@ export default function New() {
 				prev.filter((upload) => upload.info.public_id !== public_id)
 			);
 			removeTempImageUpload(tempid);
+			toast("Image Deleted", {
+				description: "Image has been deleted successfully",
+			});
 		} else {
 			console.log("Error deleting image");
+			toast("Error Deleting the Image", {
+				description: "Please try again",
+			});
 		}
 	};
 
@@ -121,6 +131,9 @@ export default function New() {
 			})
 			.catch((err) => {
 				console.log("err", err);
+				toast("Error Adding the Post", {
+					description: err,
+				});
 			})
 			.finally(() => {
 				setPostingDataLoading(false);
@@ -230,7 +243,7 @@ export default function New() {
 						Upload Image(s){" "}
 						<span className="text-xs font-light">(Optional)</span>
 					</label>
-					<div className="flex gap-3 items-center my-3 w-full h-40">
+					<div className="flex gap-3 items-center my-3 h-40">
 						<CldUploadButton
 							className="p-auto h-full outline-dashed aspect-square dark:outline-slate-500 rounded dark:bg-slate-900 bg-slate-100"
 							uploadPreset="gossip"
@@ -251,15 +264,16 @@ export default function New() {
 									"google_drive",
 									"instagram",
 									"facebook",
+									"unsplash"
 								],
 							}}
 						/>
-						<div className="overflow-x-auto overflow-y-visible">
-							<div className="flex gap-6 my-4 items-center ease-in-out duration-300 h-full w-fit">
+						<div className="h-full overflow-visible">
+							<div className="flex gap-6 h-full items-center ease-in-out duration-300">
 								{uploadResponses?.map((uploadResponse) => (
 									<div
 										key={uploadResponse.info.id}
-										className="relative"
+										className="relative h-full"
 									>
 										<label
 											htmlFor={uploadResponse.info.id}
@@ -288,7 +302,7 @@ export default function New() {
 														.public_id
 												)
 											}
-											className="h-full w-auto rounded-md peer"
+											className="h-full w-fit rounded-md peer"
 										/>
 									</div>
 								))}

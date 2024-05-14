@@ -67,6 +67,8 @@ export default function SingleGossip({
 										height={image.info.height}
 										alt={`${gossip.title} image ${idx}`}
 										className="gossip-image w-full m-auto"
+										placeholder="blur"
+										blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII="
 									/>
 								</CarouselItem>
 							))}
