@@ -20,6 +20,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { toast } from "sonner";
 
 export default function Report({ postId }: { postId: string }) {
 	const [reportReason, setReportReason] = useState("");
@@ -41,9 +42,14 @@ export default function Report({ postId }: { postId: string }) {
 				if (!res.success) {
 					throw res.message;
 				}
+				toast("Reported", {
+					description: "Post has been reported",
+				});
 			})
 			.catch((err) => {
-				console.log("err", err);
+				toast("Error", {
+					description: err,
+				});
 			})
 			.finally(() => {
 				setReportReason("");

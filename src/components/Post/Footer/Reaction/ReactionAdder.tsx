@@ -17,6 +17,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { toast } from "sonner";
 
 export default function ReactionAdder({
 	userEmail,
@@ -59,9 +60,15 @@ export default function ReactionAdder({
 					userId: String(userReaction?.userId),
 				});
 				// setPostReactions(res.updatedPostReactions);
+				toast("Reaction Added", {
+					description: "Your reaction has been added",
+				});
 			})
 			.catch((err) => {
 				console.log("err", err);
+				toast("Error", {
+					description: err,
+				});
 			});
 	};
 
@@ -78,9 +85,15 @@ export default function ReactionAdder({
 				}
 				setUserReaction(null);
 				setReactionsOnPostCount((prev: number) => (prev -= 1));
+				toast("Reaction Removed", {
+					description: "Your reaction has been removed",
+				});
 			})
 			.catch((err) => {
 				console.log("err", err);
+				toast("Error", {
+					description: err,
+				});
 			});
 	};
 

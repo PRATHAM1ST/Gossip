@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { inter } from "./fonts";
 import { ThemeProvider } from "@/components/theme-provider";
 import NextAuthProvider from "./providers/NextAuthProvider";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
 	title: "Only Gossips",

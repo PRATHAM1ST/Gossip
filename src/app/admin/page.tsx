@@ -17,10 +17,9 @@ import { deleteReaction } from "@/utils/Admin/deleteReaction";
 import { useSession } from "next-auth/react";
 import { checkAdmin } from "@/utils/Admin/checkAdmin";
 import { deleteReport } from "@/utils/Admin/deleteReport";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 export default function Admin() {
-	const { toast } = useToast();
 	const { data: session } = useSession();
 	const [reactions, setReactions] = React.useState<
 		{
@@ -93,8 +92,7 @@ export default function Admin() {
 
 		getReactions().then((res) => setReactions(res));
 
-		toast({
-			title: "Emojie Added",
+		toast("Emojie Added", {
 			description: "Emojie has been added to the database",
 		});
 	}
@@ -111,16 +109,12 @@ export default function Admin() {
 					) || null
 			);
 			removeTempImageUpload(tempid);
-			toast({
-				title: "Image Deleted",
+			toast("Image Deleted", {
 				description: "Image has been deleted",
-				variant: "destructive",
 			});
 		} else {
-			toast({
-				title: "Error Deleting Image",
+			toast("Error Deleting Image", {
 				description: "Error deleting image",
-				variant: "destructive",
 			});
 		}
 	}
@@ -147,16 +141,12 @@ export default function Admin() {
 								) || null
 						);
 						removeTempImageUpload(tempImage.id);
-						toast({
-							title: "Image Deleted",
+						toast("Image Deleted", {
 							description: "Image has been deleted",
-							variant: "destructive",
 						});
 					} else {
-						toast({
-							title: "Error Deleting Image",
+						toast("Error Deleting Image", {
 							description: "Error deleting image",
-							variant: "destructive",
 						});
 					}
 				}
@@ -169,10 +159,8 @@ export default function Admin() {
 		setReactions((prev) =>
 			prev.filter((reaction) => reaction.id !== reactionId)
 		);
-		toast({
-			title: "Reaction Deleted",
+		toast("Reaction Deleted", {
 			description: "Reaction has been deleted",
-			variant: "destructive",
 		});
 	}
 
@@ -181,8 +169,7 @@ export default function Admin() {
 		setReportedPosts(
 			(prev) => prev?.filter((report) => report.id !== reportId) || null
 		);
-		toast({
-			title: "Report Ignored",
+		toast("Report Ignored", {
 			description: "Report has been ignored",
 		});
 	}
