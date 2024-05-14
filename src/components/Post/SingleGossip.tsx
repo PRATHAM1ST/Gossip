@@ -56,9 +56,9 @@ export default function SingleGossip({
 			</div>
 
 			{!!gossip.images?.length && (
-				<div className="gossip-images flex gap-3 flex-wrap m-auto outline-dashed rounded-md">
-					<Carousel>
-						<CarouselContent>
+				<div className="gossip-images flex gap-3 flex-wrap m-auto rounded-md w-full">
+					<Carousel className="w-full">
+						<CarouselContent className="w-full">
 							{gossip.images?.map((image: any, idx: number) => (
 								<CarouselItem key={image.info.id}>
 									<Image
@@ -68,7 +68,9 @@ export default function SingleGossip({
 										alt={`${gossip.title} image ${idx}`}
 										className="gossip-image w-full m-auto"
 										placeholder="blur"
-										blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkAAIAAAoAAv/lxKUAAAAASUVORK5CYII="
+										loading="lazy"
+										layout="responsive"
+										blurDataURL={image.info.thumbnail_url}
 									/>
 								</CarouselItem>
 							))}
