@@ -48,10 +48,10 @@ export default function Share({ id, title }: { id: string; title: string }) {
 					<TooltipProvider>
 						<Tooltip>
 							<TooltipTrigger>
-								<Badge variant={"outline"} className="flex justify-center items-center bg-white dark:bg-slate-950 p-4">
+								<Badge variant={"outline"} className="cursor-pointer flex justify-center items-center bg-white dark:bg-slate-950 md:p-4 p-2">
 									<ShareRoundedIcon
 										fontSize="large"
-										className="-translate-x-[5%]"
+										className="-translate-x-[5%] text-2xl md:text-3xl"
 									/>
 								</Badge>
 							</TooltipTrigger>

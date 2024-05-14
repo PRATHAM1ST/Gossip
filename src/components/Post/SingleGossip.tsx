@@ -39,7 +39,7 @@ export default function SingleGossip({
 			>
 				{gossip.backgroundEmoji}
 			</div>
-			<h1 className="gossip-title text-5xl font-bold">{gossip.title}</h1>
+			<h1 className="gossip-title md:text-5xl text-3xl font-bold">{gossip.title}</h1>
 			<div className="flex justify-between first-letter items-center md:block">
 				<Badge className="w-fit h-fit" variant={"secondary"}>
 					{new Date(gossip.createdAt).toLocaleString("en-US", {
