@@ -3,8 +3,12 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
-import { createReaction } from "@/utils/Reaction/createReaction";
+import { createReaction } from "@/utils/Admin/createReaction";
 import { getReactions } from "@/utils/Reaction/getReactions";
+import { GossipsType } from "@/utils/Gossip/getGossips";
+import { getReportedPosts } from "@/utils/Admin/reportedPosts";
+import { Prisma } from "@prisma/client";
+import { getTempImages } from "@/utils/Admin/getTempImages";
 
 export default function Admin() {
 	const [reactions, setReactions] = React.useState<
@@ -14,9 +18,25 @@ export default function Admin() {
 		}[]
 	>([]);
 
+	const [reportedPosts, setReportedPosts] = React.useState<
+		{ id: string; createdAt: Date; reason: string; postId: string }[] | null
+	>(null);
+
+	const [tempImages, setTempImages] = React.useState<
+		| {
+				id: string;
+				createdAt: Date;
+				updatedAt: Date;
+				imageData: Prisma.JsonValue;
+		  }[]
+		| null
+	>(null);
+
 	React.useEffect(() => {
 		(async () => {
 			getReactions().then((res) => setReactions(res));
+			getReportedPosts().then((res) => setReportedPosts(res));
+			getTempImages().then((res) => setTempImages(res));
 		})();
 	}, []);
 
@@ -82,6 +102,61 @@ export default function Admin() {
 					<Button type="submit">Add Emojie</Button>
 				</div>
 			</form>
+
+			<div className="flex flex-col gap-4">
+				<h3 className="text-lg font-bold text-center text-slate-500 mt-5">
+					Reported Posts
+				</h3>
+				{reportedPosts ? (
+					reportedPosts.map((report, idx: number) => (
+						<div
+							key={report.id}
+							className="border-2 border-black dark:border-slate-500 dark:bg-slate-900 rounded px-4 py-1"
+						>
+							<p>Post Id: {report.postId}</p>
+							<p>Reason: {report.reason}</p>
+							<p>
+								Reported At:{" "}
+								{new Date(
+									report.createdAt
+								).toLocaleDateString()}
+							</p>
+						</div>
+					))
+				) : (
+					<>None</>
+				)}
+			</div>
+
+			<div className="flex flex-col gap-4">
+				<h3 className="text-lg font-bold text-center text-slate-500 mt-5">
+					Temp Images
+				</h3>
+				{tempImages ? (
+					tempImages.map((tempImage, idx: number) => (
+						<div
+							key={tempImage.id}
+							className="border-2 border-black dark:border-slate-500 dark:bg-slate-900 rounded px-4 py-1"
+						>
+							<p>Image Id: {tempImage.id}</p>
+							<p>
+								Created At:{" "}
+								{new Date(
+									tempImage.createdAt
+								).toLocaleDateString()}
+							</p>
+							<p>
+								Updated At:{" "}
+								{new Date(
+									tempImage.updatedAt
+								).toLocaleDateString()}
+							</p>
+						</div>
+					))
+				) : (
+					<>None</>
+				)}
+			</div>
 		</div>
 	);
 }

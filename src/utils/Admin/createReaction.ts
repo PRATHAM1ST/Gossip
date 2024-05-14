@@ -11,7 +11,7 @@ type RequestType = {
 
 export async function createReaction({ emojie, description }: RequestType) {
 	try {
-		const result = await prisma.reactionsList.create({
+		await prisma.reactionsList.create({
 			data: {
 				emojie,
 				description,

@@ -230,9 +230,9 @@ export default function New() {
 						Upload Image(s){" "}
 						<span className="text-xs font-light">(Optional)</span>
 					</label>
-					<div className="flex gap-3 items-center my-3">
+					<div className="flex gap-3 items-center my-3 w-full h-40">
 						<CldUploadButton
-							className="p-20 outline-dashed dark:outline-slate-500 rounded dark:bg-slate-900 bg-slate-100"
+							className="p-auto h-full outline-dashed aspect-square dark:outline-slate-500 rounded dark:bg-slate-900 bg-slate-100"
 							uploadPreset="gossip"
 							onUpload={handleUpload}
 							options={{
@@ -254,47 +254,52 @@ export default function New() {
 								],
 							}}
 						/>
-						<div className="flex gap-6 flex-wrap my-4 items-center ease-in-out duration-300">
-							{uploadResponses?.map((uploadResponse) => (
-								<div
-									key={uploadResponse.info.id}
-									className="relative"
-								>
-									<label
-										htmlFor={uploadResponse.info.id}
-										className="absolute z-40 top-0 right-0 translate-x-2/4 -translate-y-2/4 text-xs p-1 w-5 h-5 flex justify-center items-center font-bold text-white bg-red-500 rounded cursor-pointer hover:bg-red-600"
-										onClick={() =>
-											handleDelete(uploadResponse)
-										}
+						<div className="overflow-x-auto overflow-y-visible">
+							<div className="flex gap-6 my-4 items-center ease-in-out duration-300 h-full w-fit">
+								{uploadResponses?.map((uploadResponse) => (
+									<div
+										key={uploadResponse.info.id}
+										className="relative"
 									>
-										<CloseIcon
-											className="text-xs"
-											style={{
-												fontSize: "0.75rem",
-											}}
+										<label
+											htmlFor={uploadResponse.info.id}
+											className="absolute z-40 top-0 right-0 translate-x-2/4 -translate-y-2/4 text-xs p-1 w-5 h-5 flex justify-center items-center font-bold text-white bg-red-500 rounded cursor-pointer hover:bg-red-600"
+											onClick={() =>
+												handleDelete(uploadResponse)
+											}
+										>
+											<CloseIcon
+												className="text-xs"
+												style={{
+													fontSize: "0.75rem",
+												}}
+											/>
+										</label>
+										<CldImage
+											id={uploadResponse.info.id}
+											height={uploadResponse.info.height}
+											width={uploadResponse.info.width}
+											src={uploadResponse.info.public_id}
+											sizes="100vw"
+											alt="Description of my image"
+											onClick={() =>
+												handleDelete(
+													uploadResponse.info
+														.public_id
+												)
+											}
+											className="h-full w-auto rounded-md peer"
 										/>
-									</label>
-									<CldImage
-										id={uploadResponse.info.id}
-										height={uploadResponse.info.height}
-										width={uploadResponse.info.width}
-										src={uploadResponse.info.public_id}
-										sizes="100vw"
-										alt="Description of my image"
-										onClick={() =>
-											handleDelete(
-												uploadResponse.info.public_id
-											)
-										}
-										className="w-20 h-fit rounded-md peer"
-									/>
-								</div>
-							))}
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				</div>
 
-				<Button className="my-5 mb-8" type="submit">Submit</Button>
+				<Button className="my-5 mb-8" type="submit">
+					Submit
+				</Button>
 			</form>
 		</div>
 	);
