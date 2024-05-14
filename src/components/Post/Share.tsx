@@ -37,6 +37,7 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { toast } from "sonner";
 
 export default function Share({ id, title }: { id: string; title: string }) {
 	const shareUrl = `https://onlygossips.prathamchudasama.com/view/${id}`;
@@ -68,6 +69,7 @@ export default function Share({ id, title }: { id: string; title: string }) {
 								className="cursor-pointer"
 								onClick={() => {
 									navigator.clipboard.writeText(shareUrl);
+									toast("Link Copied to Clipboard");
 								}}
 							/>
 							<WhatsappShareButton title={message} url={shareUrl}>
