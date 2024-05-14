@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { createReaction } from "@/utils/Admin/createReaction";
 import { getReactions } from "@/utils/Reaction/getReactions";
-import { GossipsType } from "@/utils/Gossip/getGossips";
 import { getReportedPosts } from "@/utils/Admin/reportedPosts";
 import { Prisma } from "@prisma/client";
 import { getTempImages } from "@/utils/Admin/getTempImages";
@@ -15,8 +14,14 @@ import Link from "next/link";
 import { deletePost } from "@/utils/Admin/deletePost";
 import { removeTempImageUpload } from "@/utils/Temp/removeTempImageUpload";
 import { deleteReaction } from "@/utils/Admin/deleteReaction";
+import { useSession } from "next-auth/react";
+import { checkAdmin } from "@/utils/Admin/checkAdmin";
+import { deleteReport } from "@/utils/Admin/deleteReport";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Admin() {
+	const { toast } = useToast();
+	const { data: session } = useSession();
 	const [reactions, setReactions] = React.useState<
 		{
 			id: string;
@@ -51,19 +56,30 @@ export default function Admin() {
 	>(null);
 
 	React.useEffect(() => {
+		if (!session?.user?.email) return;
 		(async () => {
 			getReactions().then((res) => setReactions(res));
 			getReportedPosts().then((res) => setReportedPosts(res));
 			getTempImages().then((res) => setTempImages(res));
 		})();
-	}, []);
+	}, [session]);
+
+	if (
+		(session &&
+			session.user &&
+			checkAdmin({
+				email: session.user.email as string,
+				token_provider:
+					((session as any).token_provider as string) ?? "",
+			}).success) === false
+	)
+		return (window.location.href = "/api/auth/signin");
 
 	async function sendDataToServerForEmojie(
 		e: React.FormEvent<HTMLFormElement>
 	) {
 		e.preventDefault();
 		const form = e.target as HTMLFormElement;
-		console.log("form: ", form);
 		const formData = new FormData(form);
 		const emojie = formData.get("emojie");
 		const description = formData.get("description");
@@ -76,6 +92,11 @@ export default function Admin() {
 		form.reset();
 
 		getReactions().then((res) => setReactions(res));
+
+		toast({
+			title: "Emojie Added",
+			description: "Emojie has been added to the database",
+		});
 	}
 
 	async function handleTempImageDelete(tempImageData: any, tempid: string) {
@@ -90,8 +111,17 @@ export default function Admin() {
 					) || null
 			);
 			removeTempImageUpload(tempid);
+			toast({
+				title: "Image Deleted",
+				description: "Image has been deleted",
+				variant: "destructive",
+			});
 		} else {
-			console.log("Error deleting image");
+			toast({
+				title: "Error Deleting Image",
+				description: "Error deleting image",
+				variant: "destructive",
+			});
 		}
 	}
 
@@ -117,8 +147,17 @@ export default function Admin() {
 								) || null
 						);
 						removeTempImageUpload(tempImage.id);
+						toast({
+							title: "Image Deleted",
+							description: "Image has been deleted",
+							variant: "destructive",
+						});
 					} else {
-						console.log("Error deleting image");
+						toast({
+							title: "Error Deleting Image",
+							description: "Error deleting image",
+							variant: "destructive",
+						});
 					}
 				}
 			});
@@ -130,6 +169,22 @@ export default function Admin() {
 		setReactions((prev) =>
 			prev.filter((reaction) => reaction.id !== reactionId)
 		);
+		toast({
+			title: "Reaction Deleted",
+			description: "Reaction has been deleted",
+			variant: "destructive",
+		});
+	}
+
+	async function handleIgnoringReport(reportId: string) {
+		await deleteReport(reportId);
+		setReportedPosts(
+			(prev) => prev?.filter((report) => report.id !== reportId) || null
+		);
+		toast({
+			title: "Report Ignored",
+			description: "Report has been ignored",
+		});
 	}
 
 	return (
@@ -239,6 +294,15 @@ export default function Admin() {
 									</Button>
 								</Link>
 								<Button
+									variant="outline"
+									className="my-4"
+									onClick={() =>
+										handleIgnoringReport(report.id)
+									}
+								>
+									Ignore Report
+								</Button>
+								<Button
 									variant="destructive"
 									className="my-4"
 									onClick={() => deletePost(report.postId)}
@@ -328,7 +392,7 @@ export default function Admin() {
 								}
 								sizes="100vw"
 								alt="Description of my image"
-								className="h-auto w-full rounded-md peer"
+								className="h-auto w-full object-fill rounded-md peer"
 							/>
 							<Button
 								variant="destructive"

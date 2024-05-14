@@ -6,7 +6,7 @@ import { ThemeToggle } from "./ui/toggle-theme";
 export default function Header({ removeAdder = false }) {
 	return (
 		<header className="flex justify-between items-center my-5">
-			<Link href="/" className={"text-xl md:text-3xl"}>
+			<Link href="/page/1" className={"text-xl md:text-3xl"}>
 				<span className={gotham.className}>Only</span>
 				{/* <span className={margurite.className + " text-sky-500"}> */}
 				<span className={margurite.className + " text-green-900"}>

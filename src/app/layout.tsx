@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { inter } from "./fonts";
 import { ThemeProvider } from "@/components/theme-provider";
 import NextAuthProvider from "./providers/NextAuthProvider";
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
 	title: "Only Gossips",
@@ -29,6 +30,7 @@ export default async function RootLayout({
 							disableTransitionOnChange
 						>
 							{children}
+							<Toaster />
 						</ThemeProvider>
 					</>
 				</NextAuthProvider>

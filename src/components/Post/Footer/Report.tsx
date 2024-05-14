@@ -24,7 +24,8 @@ import {
 export default function Report({ postId }: { postId: string }) {
 	const [reportReason, setReportReason] = useState("");
 
-	const handleAddReport = () => {
+	const handleAddReport = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		if (
 			!reportReason &&
 			reportReason.length < 10 &&
@@ -72,7 +73,10 @@ export default function Report({ postId }: { postId: string }) {
 					</TooltipProvider>
 				</DrawerTrigger>
 				<DrawerContent>
-					<form className="md:m-auto w-full md:w-auto" onSubmit={handleAddReport}>
+					<form
+						className="md:m-auto w-full md:w-auto"
+						onSubmit={handleAddReport}
+					>
 						<DrawerHeader>
 							<DrawerTitle>Are you absolutely sure?</DrawerTitle>
 							<DrawerDescription>
